@@ -12,12 +12,14 @@ amixer -c 2 set Mic 32
 
 
 #rm files
-rm -f cam.mkv cam.mp4 scr.mkv scr.mp4 aud.wav
+cp cam.mkv scr.mkv aud.wav archive/
+rm -f cam.mkv scr.mkv aud.wav
 
 
 #Capture 
 #ffmpeg -y -f video4linux2 -s 1920x1080 -i /dev/video0 -vcodec libx264 cam.mkv  > /dev/null 2>&1 &
 #ffmpeg -y -f video4linux2 -s 1920x1080 -i /dev/video0 -vcodec libx264 -preset ultrafast -qp 0 cam.mkv  > /dev/null 2>&1 &
+
 ffmpeg -y -f video4linux2 -s 1920x1080 -pix_fmt h264 -r 30 -i /dev/video0 cam.mkv > /dev/null 2>&1 &
 ffmpeg -y -f x11grab -framerate 30 -video_size hd1080 -i :0.0+4480,400 -vcodec libx264 -preset ultrafast -qp 0 scr.mkv  > /dev/null 2>&1 &
 ffmpeg -y -f alsa -ac 2 -i plughw:2,0 aud.wav > /dev/null 2>&1 &
