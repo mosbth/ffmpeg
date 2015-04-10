@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# apt-get install alsa-utils
+#
 
 #Settingb for cam
 #v4l2-ctl --set-fmt-video=width=1920,height=1080,pixelformat=1
@@ -12,7 +15,13 @@ amixer -c 2 set Mic 32
 
 
 #rm files
-cp cam.mkv scr.mkv aud.wav archive/
+if [ ! -d archive ]; then
+    echo "Missing directory 'archive'."
+    exit 1
+fi
+
+
+cp -f cam.mkv scr.mkv aud.wav archive/
 rm -f cam.mkv scr.mkv aud.wav
 
 
@@ -41,5 +50,3 @@ sleep 5
 #vlc --fullscreen cam.mp4
 #openshot cam.mp4 scr.mp4 aud.wav
 openshot cam.mkv scr.mkv aud.wav
-
-
