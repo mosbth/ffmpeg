@@ -53,6 +53,8 @@ ffmpeg \
 -acodec libmp3lame -threads 6 -q:a 5 -b:a 64KB \
 -f flv -ar 44100 "$STREAM_URL"
 
+# Start webcam through commandline.
+# cvlc v4l2:///dev/video0 
 
 
 #ffmpeg \
