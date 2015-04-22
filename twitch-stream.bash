@@ -37,9 +37,27 @@ STREAM_URL="rtmp://live.twitch.tv/app/$STREAM_KEY"
 
 # 
 
+#ffmpeg \
+#-f alsa -ac 2 -i plughw:2,0 \
+#-f x11grab -framerate 30 -video_size hd1080 -i :0.0+4480,400 \
+#-vcodec libx264 -video_size hd1080 -preset ultrafast -qp 0 \
+#-acodec libmp3lame -threads 6 -qscale 5 -b 64KB \
+#-f flv -ar 44100 "$STREAM_URL"
+
+#-f x11grab -framerate 30 -s 1920x1080 -i :0.0+4480,400 \
+
 ffmpeg \
--f alsa -ac 2 -i "$INAUD" \
--f x11grab -video_size hd1080 -i :0.0+4480,400 -framerate 30 \
--vcodec libx264 -s "$OUTRES" -preset ultrafast \
--acodec libmp3lame -threads 6 -qscale 5 -b 64KB \
+-f alsa -ac 2 -i plughw:2,0 \
+-f x11grab -framerate 30 -s 1920x1080 -i :0.0+4480,400 \
+-vcodec libx264 -pix_fmt yuv420p -s 1920x1080 -preset fast  \
+-acodec libmp3lame -threads 6 -q:a 5 -b:a 64KB \
 -f flv -ar 44100 "$STREAM_URL"
+
+
+
+#ffmpeg \
+#-f alsa -ac 2 -i "$INAUD" \
+#-f x11grab -video_size hd1080 -i :0.0+4480,400 -framerate 30 \
+#-vcodec libx264 -s "$OUTRES" -preset ultrafast \
+#-acodec libmp3lame -threads 6 -qscale 5 -b 64KB \
+#-f flv -ar 44100 "$STREAM_URL"
