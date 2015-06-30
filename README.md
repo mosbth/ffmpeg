@@ -50,7 +50,7 @@ https://github.com/wargio/Twitch-Streamer-Linux
 http://devram0.blogspot.it/2013/10/twitch-streamer-for-linux.html
 
 
-Grap desktop
+Grab desktop
 --------------------
 
 https://trac.ffmpeg.org/wiki/How%20to%20grab%20the%20desktop%20(screen)%20with%20FFmpeg
@@ -67,7 +67,7 @@ vlc --fullscreen out.mp4
 
 
 
-Grap cam
+Grab cam
 -----------------------------------
 
 desktop:~/capture> ffmpeg -f video4linux2 -s 1980x1020 -i /dev/video0 -r 24 -vcodec libx264 -y cam.mkv ; ffmpeg -i cam.mkv -vcodec libx264 -crf 22 -y cam.mp4 ; vlc --fullscreen cam.mp4
@@ -101,3 +101,9 @@ sätt nivån på inspelningsljudet i micken
 amixer -c 2 set Mic 32
 
 
+Set default input device.
+https://wiki.archlinux.org/index.php/PulseAudio/Examples#Set_default_input_sources
+pacmd "load-module module-alsa-source source_name=rode device=hw:3"
+pacmd "set-default-source rode"
+
+Eventually set default input device in config-file, copy from /etc/pulse/default.pa and store in .pulse (?)
