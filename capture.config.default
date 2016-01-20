@@ -1,0 +1,11 @@
+# Which video device to use for cam
+VIDEO_DEVICE=/dev/video1
+
+# Which video device to use for cam
+AUDIO_DEVICE=plughw:2,0
+
+# Which area of the screen to capture
+SCREEN_AREA=:0.0+4480,0
+
+# Post process video editor
+VIDEO_EDITOR="kdenlive -i cam.mkv,scr.mkv,aud.wav proj"

@@ -1,45 +1,91 @@
 #!/bin/bash
 #
-# apt-get install alsa-utils
+# Capture cam, screen and audio as three separate files and 
+# postprocess in video editor.
+#
+# Notes on installation (TBD):
+#  apt-get install alsa-utils
 #
 
-#Settingb for cam
-#v4l2-ctl --set-fmt-video=width=1920,height=1080,pixelformat=1
-v4l2-ctl --get-fmt-video
-#v4l2-ctl --set-parm=30
-v4l2-ctl --get-parm
+#
+# Load the config file
+#
+CONFIG_FILE=capture.config
+if [ ! -f $CONFIG_FILE ]; then
+    echo "Missing config file: 'capture.config'"
+    exit 1
+fi
+. $CONFIG_FILE
 
-# Settings for mic
-amixer -c 2 set Mic 32
-#amixer -c 2
+echo "Using settings: "
+echo " Video device = $VIDEO_DEVICE"
+echo " Audio device = $AUDIO_DEVICE"
+echo " Screen area  = $SCREEN_AREA"
+echo
 
 
-#rm files
+#
+# Move previos files to archive for short term backup
+#
+echo "Moving existing clips to archive."
+
 if [ ! -d archive ]; then
     echo "Missing directory 'archive'."
     exit 1
 fi
 
-
 cp -f cam.mkv scr.mkv aud.wav archive/
 rm -f cam.mkv scr.mkv aud.wav
+echo
 
 
-#Capture 
+#
+# Settings for cam
+#
+echo "Settings for cam."
+#v4l2-ctl --set-fmt-video=width=1920,height=1080,pixelformat=1
+v4l2-ctl --device=$VIDEO_DEVICE --get-fmt-video
+#v4l2-ctl --set-parm=30
+v4l2-ctl --device=$VIDEO_DEVICE --get-parm
+echo
+
+
+#
+# Settings for mic
+#
+echo "Settings for mic."
+amixer -c 2 set Mic 32
+#amixer -c 2
+echo
+
+
+#
+# Capture 
+#
 #ffmpeg -y -f video4linux2 -s 1920x1080 -i /dev/video0 -vcodec libx264 cam.mkv  > /dev/null 2>&1 &
 #ffmpeg -y -f video4linux2 -s 1920x1080 -i /dev/video0 -vcodec libx264 -preset ultrafast -qp 0 cam.mkv  > /dev/null 2>&1 &
 
-ffmpeg -y -f video4linux2 -s 1920x1080 -pix_fmt h264 -r 30 -i /dev/video0 cam.mkv > /dev/null 2>&1 &
-ffmpeg -y -f x11grab -framerate 30 -video_size hd1080 -i :0.0+4480,400 -vcodec libx264 -preset ultrafast -qp 0 scr.mkv  > /dev/null 2>&1 &
-ffmpeg -y -f alsa -ac 2 -i plughw:2,0 aud.wav > /dev/null 2>&1 &
+# Capture cam as cam.mkv
+echo "Grabbing cam.mkv..."
+ffmpeg -y -f video4linux2 -s 1920x1080 -pix_fmt h264 -r 30 -i $VIDEO_DEVICE cam.mkv > /dev/null 2>&1 &
 
+# Capture screen as src.mkv
+echo "Grabbing scr.mkv..."
+ffmpeg -y -f x11grab -framerate 30 -video_size hd1080 -i $SCREEN_AREA -vcodec libx264 -preset ultrafast -qp 0 scr.mkv  > /dev/null 2>&1 &
 
-#Pause until done
+# Capture audio as aud.wav
+echo "Grabbing aud.wav..."
+ffmpeg -y -f alsa -ac 2 -i $AUDIO_DEVICE aud.wav > /dev/null 2>&1 &
+
+# Pause until done
 read -p "Press any key to stop recording."
+echo
 pkill ffmpeg
 #ps aux | grep ffmpeg | awk '{print $2}' | xargs kill
 echo "Sleeping 5 to wait until capture dies."
 sleep 5 
+echo
+
 
 
 # Encode
@@ -47,6 +93,12 @@ sleep 5
 #ffmpeg -i scr.mkv -vcodec libx264 -crf 22 -y scr.mp4
 
 
+#
+# Do postprocess and edit video
+#
 #vlc --fullscreen cam.mp4
 #openshot cam.mp4 scr.mp4 aud.wav
-openshot cam.mkv scr.mkv aud.wav
+#openshot cam.mkv scr.mkv aud.wav
+#kdenlive -i cam.mkv,scr.mkv,aud.wav proj
+echo "Postprocess using: $VIDEO_EDITOR"
+exec $VIDEO_EDITOR
