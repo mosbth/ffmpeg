@@ -66,21 +66,29 @@ echo
 #ffmpeg -y -f video4linux2 -s 1920x1080 -i /dev/video0 -vcodec libx264 -preset ultrafast -qp 0 cam.mkv  > /dev/null 2>&1 &
 
 # Capture cam as cam.mkv
-echo "Grabbing cam.mkv..."
-ffmpeg -y -f video4linux2 -s 1920x1080 -pix_fmt h264 -r 30 -i $VIDEO_DEVICE cam.mkv > /dev/null 2>&1 &
+echo -n "Grabbing cam.mkv..."
+ffmpeg -y -f video4linux2 -s 1920x1080 -pix_fmt h264 -framerate 30 -i $VIDEO_DEVICE cam.mkv > /dev/null 2>&1 &
+camPid=$!
+echo " ($camPid)"
 
 # Capture screen as src.mkv
-echo "Grabbing scr.mkv..."
+echo -n "Grabbing scr.mkv..."
 ffmpeg -y -f x11grab -framerate 30 -video_size hd1080 -i $SCREEN_AREA -vcodec libx264 -preset ultrafast -qp 0 scr.mkv  > /dev/null 2>&1 &
+scrPid=$!
+echo " ($scrPid)"
 
 # Capture audio as aud.wav
-echo "Grabbing aud.wav..."
-ffmpeg -y -f alsa -ac 2 -i $AUDIO_DEVICE aud.wav > /dev/null 2>&1 &
+echo -n "Grabbing aud.wav..."
+ffmpeg -y -f alsa -ac 1 -ar 44100 -i $AUDIO_DEVICE aud.wav > /dev/null 2>&1 &
+audPid=$!
+echo " ($audPid)"
+echo
 
 # Pause until done
 read -p "Press any key to stop recording."
 echo
-pkill ffmpeg
+kill $camPid $scrPid $audPid
+#pkill ffmpeg
 #ps aux | grep ffmpeg | awk '{print $2}' | xargs kill
 echo "Sleeping 5 to wait until capture dies."
 sleep 5 
@@ -92,6 +100,18 @@ echo
 #ffmpeg -i cam.mkv -vcodec libx264 -crf 22 -y cam.mp4
 #ffmpeg -i scr.mkv -vcodec libx264 -crf 22 -y scr.mp4
 
+#
+# Get details of each clip
+#
+for clip in "cam.mkv" "scr.mkv" "aud.wav"; do
+    if [ -f $clip ]; then
+        echo -n "$clip "
+        ffmpeg -i $clip 2>&1 | grep Duration
+    fi
+done
+echo
+echo
+
 
 #
 # Do postprocess and edit video
@@ -101,4 +121,4 @@ echo
 #openshot cam.mkv scr.mkv aud.wav
 #kdenlive -i cam.mkv,scr.mkv,aud.wav proj
 echo "Postprocess using: $VIDEO_EDITOR"
-exec $VIDEO_EDITOR
+exec $VIDEO_EDITOR  &> /dev/null
