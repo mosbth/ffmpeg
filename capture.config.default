@@ -1,11 +1,26 @@
-# Which video device to use for cam
-VIDEO_DEVICE=/dev/video1
+#
+# Config for capture.bash
+#
+# Save this config file as capture.config
+# and edit it to fit your environment.
+#
 
 # Which video device to use for cam
-AUDIO_DEVICE=plughw:2,0
+VIDEO_DEVICE=/dev/video0
+
+# Which video device to use for cam
+#AUDIO_TYPE=alsa
+AUDIO_TYPE=pulse
+#AUDIO_DEVICE=plughw:2,0
+#AUDIO_DEVICE=hw:2,0
+AUDIO_DEVICE=9
 
 # Which area of the screen to capture
 SCREEN_AREA=:0.0+4480,0
 
 # Post process video editor
-VIDEO_EDITOR="kdenlive -i cam.mkv,scr.mkv,aud.wav proj"
+#VIDEO_EDITOR="openshot cam.mp4 scr.mp4 aud.wav"
+#VIDEO_EDITOR="kdenlive -i cam.mkv,scr.mkv,aud.wav proj"
+#VIDEO_EDITOR="kdenlive -i cam.mkv,scr.mkv,aud.wav proj1"
+#VIDEO_EDITOR="kdenlive proj2"
+VIDEO_EDITOR="blender"

@@ -6,6 +6,18 @@
 # Notes on installation (TBD):
 #  apt-get install alsa-utils
 #
+# List devices
+#  video
+#   v4l2-ctl --list-devices
+#
+#  sound
+#   arecord -l
+#   alsamixer # to check its status
+#   pactl # another way to list info on devices
+#   pactl list sources
+#
+
+
 
 #
 # Load the config file
@@ -67,19 +79,19 @@ echo
 
 # Capture cam as cam.mkv
 echo -n "Grabbing cam.mkv..."
-ffmpeg -y -f video4linux2 -s 1920x1080 -pix_fmt h264 -framerate 30 -i $VIDEO_DEVICE cam.mkv > /dev/null 2>&1 &
+ffmpeg -y -f video4linux2 -s 1920x1080 -pix_fmt h264 -framerate 30 -i $VIDEO_DEVICE cam.mkv &> /dev/null &
 camPid=$!
 echo " ($camPid)"
 
 # Capture screen as src.mkv
 echo -n "Grabbing scr.mkv..."
-ffmpeg -y -f x11grab -framerate 30 -video_size hd1080 -i $SCREEN_AREA -vcodec libx264 -preset ultrafast -qp 0 scr.mkv  > /dev/null 2>&1 &
+ffmpeg -y -f x11grab -framerate 30 -video_size hd1080 -i $SCREEN_AREA -vcodec libx264 -preset ultrafast -qp 0 scr.mkv  &> /dev/null &
 scrPid=$!
 echo " ($scrPid)"
 
 # Capture audio as aud.wav
 echo -n "Grabbing aud.wav..."
-ffmpeg -y -f alsa -ac 1 -ar 44100 -i $AUDIO_DEVICE aud.wav > /dev/null 2>&1 &
+ffmpeg -y -f $AUDIO_TYPE -ac 1 -ar 44100 -i $AUDIO_DEVICE aud.wav &> /dev/null &
 audPid=$!
 echo " ($audPid)"
 echo
@@ -93,6 +105,13 @@ kill $camPid $scrPid $audPid
 echo "Sleeping 5 to wait until capture dies."
 sleep 5 
 echo
+
+
+
+#
+# Normalize audio
+#
+./normalize-audio.bash
 
 
 
