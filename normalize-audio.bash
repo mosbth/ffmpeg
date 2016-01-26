@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Normalize tha audio to 0 dB when detecting negative dB values.
+# Normalize the audio to 0 dB when detecting negative dB values.
 #
 
 
