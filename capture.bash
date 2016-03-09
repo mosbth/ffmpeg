@@ -16,6 +16,9 @@
 #   pactl # another way to list info on devices
 #   pactl list sources
 #
+# Editor
+#  apt-get install blender
+#
 
 
 
@@ -47,7 +50,7 @@ if [ ! -d archive ]; then
 fi
 
 cp -f cam.mkv scr.mkv aud.wav archive/
-rm -f cam.mkv scr.mkv aud.wav
+rm -f cam.mkv scr.mkv aud.wav aud_normalized.wav aud_original.wav
 echo
 
 
