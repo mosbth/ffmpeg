@@ -9,6 +9,8 @@
 # List devices
 #  video
 #   v4l2-ctl --list-devices
+#   v4l2-ctl -l
+#   v4l2-ctl --set-config=...
 #
 #  sound
 #   arecord -l
