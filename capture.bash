@@ -21,6 +21,11 @@
 # Editor
 #  apt-get install blender
 #
+# Other utilities you might want and need.
+#  vlc
+#  audacity
+#  obs
+#  
 
 
 

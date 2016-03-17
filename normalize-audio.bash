@@ -11,7 +11,7 @@ extension="${filename##*.}"
 filename="${filename%.*}"
 target="$dir/${filename}_norm.$extension"
 
-echo -n "Analyzing src=''$src'"
+echo -n "Analyzing src='$src'"
 db=$( ffmpeg -i "$src" -af "volumedetect" -f null /dev/null 2>&1 | grep max_volume | awk -F': ' '{print $2}' | cut -d' ' -f1 )
 echo " detected $db dB"
 
