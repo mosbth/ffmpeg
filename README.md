@@ -101,9 +101,13 @@ sätt nivån på inspelningsljudet i micken
 amixer -c 2 set Mic 32
 
 
-Set default input device.
+### Set default input device.
+
 https://wiki.archlinux.org/index.php/PulseAudio/Examples#Set_default_input_sources
+
+```
 pacmd "load-module module-alsa-source source_name=rode device=hw:3"
 pacmd "set-default-source rode"
+```
 
 Eventually set default input device in config-file, copy from /etc/pulse/default.pa and store in .pulse (?)
