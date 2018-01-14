@@ -105,8 +105,17 @@ amixer -c 2 set Mic 32
 
 https://wiki.archlinux.org/index.php/PulseAudio/Examples#Set_default_input_sources
 
+Useful when skype does not work with the mic.
+
 ```
-pacmd "load-module module-alsa-source source_name=rode device=hw:3"
+# List available resources
+pacmd list-sources | grep -e device.string -e 'name:'
+
+# For tempory use as default device
+pacmd "set-default-source alsa_input.usb-RODE_MICROPHONESj_Rode_Podcaster-00.analog-mono"
+
+# Another way
+pacmd "load-module module-alsa-source source_name=rode device=hw:1"
 pacmd "set-default-source rode"
 ```
 
