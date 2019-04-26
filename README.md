@@ -19,46 +19,70 @@ Check what devices are arailable.
 View current setting for one device.
 
 ```text
-v4l2-ctl --device=1 --list-ctrls
-v4l2-ctl --device=1 --list-ctrls-menu
+v4l2-ctl --device=0 --list-ctrls
+v4l2-ctl --device=0 --list-ctrls-menu
 ```
 
-Edit settings, for example.
+Edit settings, for example (last time I updated on my Debian).
 
 ```text
-v4l2-ctl --device=1 --set-ctrl=exposure_auto=1
-v4l2-ctl --device=1 --set-ctrl=exposure_absolute=100
-v4l2-ctl --device=1 --set-ctrl=brightness=150
-v4l2-ctl --device=1 --set-ctrl=contrast=135
-v4l2-ctl --device=1 --set-ctrl=saturation=135
-v4l2-ctl --device=1 --set-ctrl=white_balance_temperature_auto=0
-v4l2-ctl --device=1 --set-ctrl=white_balance_temperature=2680
-v4l2-ctl --device=1 --set-ctrl=sharpness=160
-v4l2-ctl --device=1 --set-ctrl=backlight_compensation=0
-v4l2-ctl --device=1 --set-ctrl=focus_auto=0
-v4l2-ctl --device=1 --set-ctrl=focus_absolute=0
+v4l2-ctl --device=0 --set-ctrl=exposure_auto=1
+v4l2-ctl --device=0 --set-ctrl=exposure_absolute=110
+v4l2-ctl --device=0 --set-ctrl=backlight_compensation=1
+v4l2-ctl --device=0 --set-ctrl=focus_auto=0
+v4l2-ctl --device=0 --set-ctrl=focus_absolute=0
+v4l2-ctl --device=0 --set-ctrl=saturation=160
+v4l2-ctl --device=0 --set-ctrl=sharpness=160
+v4l2-ctl --device=0 --set-ctrl=brightness=110
+v4l2-ctl --device=0 --set-ctrl=contrast=128
+v4l2-ctl --device=0 --set-ctrl=white_balance_temperature_auto=0
+v4l2-ctl --device=0 --set-ctrl=white_balance_temperature=2500
+```
+
+
+
+Default settings (920C).
+
+```text
+v4l2-ctl --device=0 --set-ctrl=brightness=128
+v4l2-ctl --device=0 --set-ctrl=contrast=128
+v4l2-ctl --device=0 --set-ctrl=saturation=128
+v4l2-ctl --device=0 --set-ctrl=white_balance_temperature_auto=1
+v4l2-ctl --device=0 --set-ctrl=gain=0
+v4l2-ctl --device=0 --set-ctrl=power_line_frequency=2
+v4l2-ctl --device=0 --set-ctrl=white_balance_temperature=4000
+v4l2-ctl --device=0 --set-ctrl=sharpness=128
+v4l2-ctl --device=0 --set-ctrl=backlight_compensation=0
+v4l2-ctl --device=0 --set-ctrl=exposure_auto=3
+v4l2-ctl --device=0 --set-ctrl=exposure_absolute=250
+v4l2-ctl --device=0 --set-ctrl=exposure_auto_priority=0
+v4l2-ctl --device=0 --set-ctrl=pan_absolute=0
+v4l2-ctl --device=0 --set-ctrl=tilt_absolute=0
+v4l2-ctl --device=0 --set-ctrl=focus_auto=1
+v4l2-ctl --device=0 --set-ctrl=focus_absolute=0
+v4l2-ctl --device=0 --set-ctrl=zoom_absolute=100
 ```
 
 Current settings on my Logitech C920 on Debian Sid.
 
 ```text
-$ v4l2-ctl --device=1 --list-ctrls-menu
-                     brightness 0x00980900 (int)    : min=0 max=255 step=1 default=128 value=150
-                       contrast 0x00980901 (int)    : min=0 max=255 step=1 default=128 value=135
-                     saturation 0x00980902 (int)    : min=0 max=255 step=1 default=128 value=135
+$ v4l2-ctl --device=0 --list-ctrls-menu
+                     brightness 0x00980900 (int)    : min=0 max=255 step=1 default=128 value=110
+                       contrast 0x00980901 (int)    : min=0 max=255 step=1 default=128 value=128
+                     saturation 0x00980902 (int)    : min=0 max=255 step=1 default=128 value=160
  white_balance_temperature_auto 0x0098090c (bool)   : default=1 value=0
-                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=62
+                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=0
            power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=2
                                 0: Disabled
                                 1: 50 Hz
                                 2: 60 Hz
-      white_balance_temperature 0x0098091a (int)    : min=2000 max=6500 step=1 default=4000 value=2680
+      white_balance_temperature 0x0098091a (int)    : min=2000 max=6500 step=1 default=4000 value=2500
                       sharpness 0x0098091b (int)    : min=0 max=255 step=1 default=128 value=160
-         backlight_compensation 0x0098091c (int)    : min=0 max=1 step=1 default=0 value=0
+         backlight_compensation 0x0098091c (int)    : min=0 max=1 step=1 default=0 value=1
                   exposure_auto 0x009a0901 (menu)   : min=0 max=3 default=3 value=1
                                 1: Manual Mode
                                 3: Aperture Priority Mode
-              exposure_absolute 0x009a0902 (int)    : min=3 max=2047 step=1 default=250 value=100
+              exposure_absolute 0x009a0902 (int)    : min=3 max=2047 step=1 default=250 value=110
          exposure_auto_priority 0x009a0903 (bool)   : default=0 value=0
                    pan_absolute 0x009a0908 (int)    : min=-36000 max=36000 step=3600 default=0 value=0
                   tilt_absolute 0x009a0909 (int)    : min=-36000 max=36000 step=3600 default=0 value=0
