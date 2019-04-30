@@ -12,6 +12,6 @@ filename="${filename%.*}"
 OUTPUT="$dir/${filename}_cut${START}_${STOP}.$extension"
 
 
-ffmpeg -ss $START -to $STOP -i "$INPUT" -async 1 -c copy "$OUTPUT"
+ffmpeg -ss $START -i "$INPUT" -to $STOP -async 1 -c copy "$OUTPUT"
 
 vlc "$OUTPUT"
