@@ -3,6 +3,10 @@ Notes on capture and streaming from Debian Linux using ffmpeg
 
 Personal notes and ready to execute scripts that I use when capturing video, audio and screen to produce videos for youtube or when trying to stream to twitch.
 
+```text
+$ sudo apt-get install v4l-utils
+```
+
 
 
 How to configure webcam Debian
@@ -93,6 +97,74 @@ $ v4l2-ctl --device=0 --list-ctrls-menu
 
 
 
+Audio / Microphone
+------------------------------------------------------------
+
+List connected PCI devices.
+
+```text
+lspci -v
+```
+
+Install essentials.
+
+```text
+sudo apt-get install audacity
+sudo apt-get install alsa-utils
+```
+
+List devices.
+
+```text
+cat /proc/asound/cards
+aplay -L
+arecord -l
+```
+
+Set level of input for the mic ([reference](http://www.massyn.net/completed/recording-with-the-rode-podcaster-on-linux/
+)).
+
+```text
+cat /proc/asound/cards # Check what cardno
+amixer -c <cardno>
+amixer -c <cardno> set Mic 32 # or set to max
+```
+
+Set default input/output device ([reference](https://wiki.archlinux.org/index.php/PulseAudio/Examples#Set_default_input_sources)).
+
+```text
+pacmd list-sources | grep -e device.string -e 'name:' # get input device
+pacmd list-sinks | grep -e 'name:' -e 'index:'        # get output device
+
+sudo vim /etc/pulse/default.pa
+```
+
+```text
+### Make some devices default
+#set-default-sink output
+#set-default-source input
+set-default-source alsa_input.usb-RODE_MICROPHONESj_Rode_Podcaster-00.analog-mono
+set-default-sink alsa_output.pci-0000_00_1b.0.iec958-stereo.monitor               
+```
+
+Restart PulseAudio
+
+```text
+pulseaudio -k
+pulseaudio --start
+```
+
+
+Uncertain if this is needed.
+
+```text
+sudo alsactl init
+sudo alsactl store
+alsamixer
+```
+
+
+
 Delay audio
 ------------------------------------------------------------
 
@@ -109,7 +181,7 @@ Notes
 
 vlc -vvv v4l2:///dev/video0
 
-sudo apt-get install openshot 
+sudo apt-get install openshot
 
 http://www.oz9aec.net/index.php/gstreamer/473-using-the-logitech-c920-webcam-with-gstreamer
 
@@ -136,7 +208,7 @@ Frame rate set to 30.000 fps
 
 desktop:~> v4l2-ctl --set-parm=24
 Frame rate set to 24.000 fps
-desktop:~> 
+desktop:~>
 
 #vlc --fullscreen cam.mp4
 
@@ -173,36 +245,10 @@ desktop:~/capture> ffmpeg -f video4linux2 -s 1980x1020 -i /dev/video0 -r 24 -vco
 
 
 
-Audio
---------------------------------
-
-lspci -v
-
-sudo alsactl init
-
-aplay -L
-
-alsamixer
-sudo alsactl store
-
-
-
 Grab audio
 --------------------------------
 
-sudo apt-get install audacity
-
-arecord -l
-
-http://www.massyn.net/completed/recording-with-the-rode-podcaster-on-linux/
-sätt nivån på inspelningsljudet i micken
-
-amixer -c 2 set Mic 32
-
-
 ### Set default input device.
-
-https://wiki.archlinux.org/index.php/PulseAudio/Examples#Set_default_input_sources
 
 Useful when skype does not work with the mic.
 
